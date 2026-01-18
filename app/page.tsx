@@ -26,12 +26,17 @@ export default function Home() {
     upload: uploadImage,
     uploading: uploadingImage,
     progress: imageProgress,
+    error: imageError,
   } = useFalUpload();
   const {
     upload: uploadVideo,
     uploading: uploadingVideo,
     progress: videoProgress,
+    error: videoError,
   } = useFalUpload();
+
+  // Combined upload error
+  const uploadError = imageError || videoError;
 
   // Generation hook
   const {
@@ -158,10 +163,10 @@ export default function Home() {
         </div>
 
         {/* Error message */}
-        {error && (
+        {(error || uploadError) && (
           <div className="mb-8 p-4 bg-red-500/10 border border-red-500/50 rounded-xl flex items-center gap-3">
             <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
-            <p className="text-red-400">{error}</p>
+            <p className="text-red-400">{error || uploadError}</p>
           </div>
         )}
 
