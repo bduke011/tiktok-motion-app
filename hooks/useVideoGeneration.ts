@@ -44,9 +44,16 @@ export function useVideoGeneration(): UseVideoGenerationReturn {
   const pollStatus = useCallback(
     async (requestId: string) => {
       try {
+        // Create abort controller with 260 second timeout (n8n waits 250s)
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 260000);
+
         const response = await fetch(
-          `${N8N_STATUS_URL}?request_id=${requestId}`
+          `${N8N_STATUS_URL}?request_id=${requestId}`,
+          { signal: controller.signal }
         );
+
+        clearTimeout(timeoutId);
 
         if (!response.ok) {
           throw new Error(`Status check failed: ${response.statusText}`);
@@ -88,8 +95,14 @@ export function useVideoGeneration(): UseVideoGenerationReturn {
         // Continue polling every 15 seconds
         pollingRef.current = setTimeout(() => pollStatus(requestId), 15000);
       } catch (err) {
-        const errorMessage =
-          err instanceof Error ? err.message : "Failed to check status";
+        let errorMessage = "Failed to check status";
+        if (err instanceof Error) {
+          if (err.name === "AbortError") {
+            errorMessage = "Request timed out. Please try checking status again.";
+          } else {
+            errorMessage = err.message;
+          }
+        }
         setError(errorMessage);
         setStatus("error");
         stopPolling();
