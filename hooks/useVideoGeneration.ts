@@ -85,8 +85,8 @@ export function useVideoGeneration(): UseVideoGenerationReturn {
           setQueuePosition(null);
         }
 
-        // Continue polling
-        pollingRef.current = setTimeout(() => pollStatus(requestId), 5000);
+        // Continue polling every 15 seconds
+        pollingRef.current = setTimeout(() => pollStatus(requestId), 15000);
       } catch (err) {
         const errorMessage =
           err instanceof Error ? err.message : "Failed to check status";
