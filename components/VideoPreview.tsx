@@ -32,17 +32,17 @@ export function VideoPreview({
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto">
-      <div className="bg-surface rounded-2xl overflow-hidden shadow-2xl">
+    <div className="flex justify-center">
+      <div className="bg-surface rounded-2xl overflow-hidden shadow-2xl inline-block">
         {/* Video Player */}
-        <div className="relative bg-black">
+        <div className="bg-black">
           <video
             src={url}
             controls
             autoPlay
             loop
             playsInline
-            className="w-full h-auto max-h-[70vh] mx-auto block"
+            className="h-auto max-h-[60vh] w-auto max-w-full block"
           >
             Your browser does not support the video tag.
           </video>
