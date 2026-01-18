@@ -1,6 +1,6 @@
 "use client";
 
-import { Download, RefreshCw, Play } from "lucide-react";
+import { Download, RefreshCw } from "lucide-react";
 
 interface VideoPreviewProps {
   url: string;
@@ -35,24 +35,17 @@ export function VideoPreview({
     <div className="w-full max-w-2xl mx-auto">
       <div className="bg-surface rounded-2xl overflow-hidden shadow-2xl">
         {/* Video Player */}
-        <div className="relative aspect-[9/16] max-h-[500px] bg-black flex items-center justify-center">
+        <div className="relative bg-black">
           <video
             src={url}
             controls
             autoPlay
             loop
             playsInline
-            className="w-full h-full object-contain"
+            className="w-full h-auto max-h-[70vh] mx-auto block"
           >
             Your browser does not support the video tag.
           </video>
-
-          {/* Play indicator overlay - shows briefly */}
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-0 hover:opacity-100 transition-opacity">
-            <div className="w-20 h-20 rounded-full bg-primary/80 flex items-center justify-center">
-              <Play className="w-10 h-10 text-white ml-1" fill="white" />
-            </div>
-          </div>
         </div>
 
         {/* Actions */}
