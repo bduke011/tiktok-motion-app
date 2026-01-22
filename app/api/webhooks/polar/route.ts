@@ -155,7 +155,53 @@ export const POST = Webhooks({
 
   onOrderPaid: async (payload) => {
     const order = payload.data;
-    console.log("Order paid:", order.id);
-    // Handle one-time purchases if needed
+    console.log("Order paid:", order.id, JSON.stringify(order, null, 2));
+
+    // Handle subscription orders
+    if (order.subscription && order.productId && order.customerId) {
+      const tier = getTierFromProductId(order.productId);
+      const credits = TIER_CREDITS[tier];
+
+      // Find user by Polar customer ID or email
+      let user = await prisma.user.findFirst({
+        where: { polarCustomerId: order.customerId },
+      });
+
+      // If not found by customerId, try by email
+      if (!user && order.customerEmail) {
+        user = await prisma.user.findFirst({
+          where: { email: order.customerEmail },
+        });
+
+        // Link the customer ID
+        if (user) {
+          await prisma.user.update({
+            where: { id: user.id },
+            data: { polarCustomerId: order.customerId },
+          });
+        }
+      }
+
+      if (user) {
+        await prisma.user.update({
+          where: { id: user.id },
+          data: {
+            subscriptionTier: tier,
+            subscriptionStatus: "active",
+            subscriptionId: order.subscriptionId || order.subscription.id,
+            credits: credits === -1 ? 999999 : credits,
+            creditsResetDate: new Date(),
+          },
+        });
+        console.log(`Order paid - Updated user ${user.email} to tier ${tier} with ${credits} credits`);
+      } else {
+        console.warn(`Order paid - No user found for customer ${order.customerId} or email ${order.customerEmail}`);
+      }
+    }
+  },
+
+  onOrderCreated: async (payload) => {
+    const order = payload.data;
+    console.log("Order created:", order.id);
   },
 });
