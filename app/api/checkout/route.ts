@@ -16,8 +16,8 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const checkout = await polar.checkouts.custom.create({
-      productId,
+    const checkout = await polar.checkouts.create({
+      products: [productId],
       customerEmail: customerEmail || undefined,
       successUrl: process.env.POLAR_SUCCESS_URL || `${request.nextUrl.origin}/settings/billing?success=true`,
     });
