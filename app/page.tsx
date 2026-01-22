@@ -234,7 +234,7 @@ export default function LandingPage() {
                 <ul className="space-y-2">
                   <li className="flex items-center gap-2 text-sm text-[var(--text-muted)]">
                     <Check className="w-4 h-4 text-green-400" />
-                    4 variations per generation
+                    High-quality AI generation
                   </li>
                   <li className="flex items-center gap-2 text-sm text-[var(--text-muted)]">
                     <Check className="w-4 h-4 text-green-400" />
@@ -286,7 +286,7 @@ export default function LandingPage() {
                 <ul className="space-y-2">
                   <li className="flex items-center gap-2 text-sm text-[var(--text-muted)]">
                     <Check className="w-4 h-4 text-green-400" />
-                    5-second TikTok-ready clips
+                    Match your reference video length
                   </li>
                   <li className="flex items-center gap-2 text-sm text-[var(--text-muted)]">
                     <Check className="w-4 h-4 text-green-400" />
