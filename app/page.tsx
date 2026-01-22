@@ -1,282 +1,156 @@
 "use client";
 
-import { useState, useCallback } from "react";
-import { Sparkles, AlertCircle } from "lucide-react";
-import { FileUploader } from "@/components/FileUploader";
-import { VideoPreview } from "@/components/VideoPreview";
-import { ProgressIndicator } from "@/components/ProgressIndicator";
-import { useFalUpload } from "@/hooks/useFalUpload";
-import { useVideoGeneration } from "@/hooks/useVideoGeneration";
-import type { CharacterOrientation } from "@/types";
+import Link from "next/link";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { Sparkles, Video, Image, Zap, ArrowRight } from "lucide-react";
+import { Header } from "@/components/Header";
+import { useEffect } from "react";
 
-export default function Home() {
-  // File states
-  const [imageFile, setImageFile] = useState<File | null>(null);
-  const [videoFile, setVideoFile] = useState<File | null>(null);
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
-  const [videoUrl, setVideoUrl] = useState<string | null>(null);
+export default function LandingPage() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
 
-  // Form states
-  const [prompt, setPrompt] = useState("");
-  const [orientation, setOrientation] =
-    useState<CharacterOrientation>("image");
+  // Redirect logged-in users to create page
+  useEffect(() => {
+    if (status === "authenticated") {
+      router.push("/create");
+    }
+  }, [status, router]);
 
-  // Upload hooks
-  const {
-    upload: uploadImage,
-    uploading: uploadingImage,
-    progress: imageProgress,
-    error: imageError,
-  } = useFalUpload();
-  const {
-    upload: uploadVideo,
-    uploading: uploadingVideo,
-    progress: videoProgress,
-    error: videoError,
-  } = useFalUpload();
-
-  // Combined upload error
-  const uploadError = imageError || videoError;
-
-  // Generation hook
-  const {
-    submit,
-    reset,
-    status,
-    queuePosition,
-    message,
-    result,
-    error,
-  } = useVideoGeneration();
-
-  const isUploading = uploadingImage || uploadingVideo;
-  const canGenerate = imageUrl && videoUrl && !isUploading && status === "idle";
-
-  // Handle image selection
-  const handleImageSelect = useCallback(
-    async (file: File) => {
-      setImageFile(file);
-      try {
-        const url = await uploadImage(file);
-        setImageUrl(url);
-      } catch (err) {
-        console.error("Image upload failed:", err);
-      }
-    },
-    [uploadImage]
-  );
-
-  // Handle video selection
-  const handleVideoSelect = useCallback(
-    async (file: File) => {
-      setVideoFile(file);
-      try {
-        const url = await uploadVideo(file);
-        setVideoUrl(url);
-      } catch (err) {
-        console.error("Video upload failed:", err);
-      }
-    },
-    [uploadVideo]
-  );
-
-  // Handle generate
-  const handleGenerate = useCallback(async () => {
-    if (!imageUrl || !videoUrl) return;
-
-    await submit({
-      image_url: imageUrl,
-      video_url: videoUrl,
-      prompt: prompt || undefined,
-      character_orientation: orientation,
-    });
-  }, [imageUrl, videoUrl, prompt, orientation, submit]);
-
-  // Handle reset
-  const handleReset = useCallback(() => {
-    reset();
-    setImageFile(null);
-    setVideoFile(null);
-    setImageUrl(null);
-    setVideoUrl(null);
-    setPrompt("");
-    setOrientation("image");
-  }, [reset]);
-
-  // Show result view
-  if (status === "complete" && result) {
+  // Show loading while checking auth
+  if (status === "loading") {
     return (
-      <main className="min-h-screen p-6 md:p-12">
-        <div className="max-w-4xl mx-auto">
-          {/* Header */}
-          <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-5xl font-bold gradient-text mb-4">
-              TikTok Motion Creator
-            </h1>
-          </div>
-
-          <VideoPreview
-            url={result.url}
-            fileName={result.file_name}
-            onCreateAnother={handleReset}
-          />
-        </div>
-      </main>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-[var(--primary)] border-t-transparent rounded-full animate-spin" />
+      </div>
     );
   }
 
-  // Show processing view
-  if (status === "processing" || status === "uploading") {
-    return (
-      <main className="min-h-screen p-6 md:p-12 flex items-center justify-center">
-        <div className="max-w-4xl mx-auto w-full">
-          {/* Header */}
-          <div className="text-center mb-8">
-            <h1 className="text-4xl md:text-5xl font-bold gradient-text mb-4">
-              TikTok Motion Creator
-            </h1>
-          </div>
-
-          <ProgressIndicator
-            status={isUploading ? "uploading" : queuePosition ? "queued" : "processing"}
-            queuePosition={queuePosition}
-            message={message || undefined}
-          />
-        </div>
-      </main>
-    );
+  // If authenticated, show nothing while redirecting
+  if (session) {
+    return null;
   }
 
-  // Show main form
   return (
-    <main className="min-h-screen p-6 md:p-12">
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold gradient-text mb-4">
-            TikTok Motion Creator
-          </h1>
-          <p className="text-text-muted text-lg max-w-2xl mx-auto">
-            Transform any photo into a viral video using AI motion control.
-            Upload a character image and a reference video to get started.
-          </p>
-        </div>
+    <>
+      <Header />
+      <main className="min-h-screen pt-16">
+        {/* Hero Section */}
+        <section className="relative overflow-hidden">
+          {/* Background gradient */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[var(--primary)]/10 via-transparent to-transparent" />
 
-        {/* Error message */}
-        {(error || uploadError) && (
-          <div className="mb-8 p-4 bg-red-500/10 border border-red-500/50 rounded-xl flex items-center gap-3">
-            <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
-            <p className="text-red-400">{error || uploadError}</p>
-          </div>
-        )}
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32">
+            <div className="text-center max-w-4xl mx-auto">
+              <h1 className="text-5xl md:text-7xl font-bold mb-6">
+                <span className="gradient-text">AI-Powered</span>
+                <br />
+                Video Creation
+              </h1>
+              <p className="text-xl md:text-2xl text-[var(--text-muted)] mb-10 max-w-2xl mx-auto">
+                Transform any photo into viral TikTok videos with AI motion control.
+                Create unique avatars. All in one studio.
+              </p>
 
-        {/* Upload section */}
-        <div className="grid md:grid-cols-2 gap-6 mb-8">
-          <FileUploader
-            accept="image"
-            label="Character Image"
-            description="JPG, PNG, WEBP - Your character's appearance"
-            onFileSelect={handleImageSelect}
-            uploading={uploadingImage}
-            uploadProgress={imageProgress}
-            uploadedUrl={imageUrl || undefined}
-          />
-
-          <FileUploader
-            accept="video"
-            label="Motion Reference"
-            description="MP4, MOV, WEBM - The dance or motion to copy"
-            onFileSelect={handleVideoSelect}
-            uploading={uploadingVideo}
-            uploadProgress={videoProgress}
-            uploadedUrl={videoUrl || undefined}
-          />
-        </div>
-
-        {/* Options section */}
-        <div className="bg-surface rounded-2xl p-6 mb-8">
-          {/* Prompt */}
-          <div className="mb-6">
-            <label className="block text-sm font-medium text-text-primary mb-2">
-              Prompt (optional)
-            </label>
-            <textarea
-              value={prompt}
-              onChange={(e) => setPrompt(e.target.value)}
-              placeholder="Describe any additional context for the video..."
-              className="w-full px-4 py-3 bg-background border border-text-muted/30 rounded-xl text-text-primary placeholder-text-muted focus:outline-none focus:border-primary transition-colors resize-none"
-              rows={2}
-            />
-          </div>
-
-          {/* Orientation */}
-          <div>
-            <label className="block text-sm font-medium text-text-primary mb-3">
-              Character Orientation
-            </label>
-            <div className="flex gap-4">
-              <label className="flex items-center gap-3 cursor-pointer group">
-                <input
-                  type="radio"
-                  name="orientation"
-                  value="image"
-                  checked={orientation === "image"}
-                  onChange={() => setOrientation("image")}
-                  className="w-5 h-5 accent-primary"
-                />
-                <div>
-                  <span className="text-text-primary group-hover:text-primary transition-colors">
-                    Match Image Pose
-                  </span>
-                  <p className="text-xs text-text-muted">
-                    Keeps your character&apos;s original pose (max 10s)
-                  </p>
-                </div>
-              </label>
-
-              <label className="flex items-center gap-3 cursor-pointer group">
-                <input
-                  type="radio"
-                  name="orientation"
-                  value="video"
-                  checked={orientation === "video"}
-                  onChange={() => setOrientation("video")}
-                  className="w-5 h-5 accent-primary"
-                />
-                <div>
-                  <span className="text-text-primary group-hover:text-primary transition-colors">
-                    Match Video Motion
-                  </span>
-                  <p className="text-xs text-text-muted">
-                    Full motion transfer from reference (max 30s)
-                  </p>
-                </div>
-              </label>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <Link
+                  href="/register"
+                  className="w-full sm:w-auto px-8 py-4 btn-primary rounded-xl font-semibold text-lg text-white flex items-center justify-center gap-2"
+                >
+                  Get Started Free
+                  <ArrowRight className="w-5 h-5" />
+                </Link>
+                <Link
+                  href="/login"
+                  className="w-full sm:w-auto px-8 py-4 bg-[var(--surface)] hover:bg-[var(--surface)]/80 rounded-xl font-semibold text-lg text-white transition-colors"
+                >
+                  Sign In
+                </Link>
+              </div>
             </div>
           </div>
-        </div>
+        </section>
 
-        {/* Generate button */}
-        <button
-          onClick={handleGenerate}
-          disabled={!canGenerate}
-          className="w-full btn-primary py-4 px-8 rounded-xl font-semibold text-lg text-white flex items-center justify-center gap-3"
-        >
-          <Sparkles className="w-6 h-6" />
-          Generate Video
-        </button>
+        {/* Features Section */}
+        <section className="py-24 bg-[var(--surface)]/50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 className="text-3xl md:text-4xl font-bold text-center mb-16">
+              Everything You Need to <span className="gradient-text">Go Viral</span>
+            </h2>
 
-        {/* Helper text */}
-        {!canGenerate && !isUploading && (
-          <p className="text-center text-text-muted text-sm mt-4">
-            {!imageUrl && !videoUrl
-              ? "Upload both a character image and motion reference to continue"
-              : !imageUrl
-              ? "Upload a character image to continue"
-              : "Upload a motion reference video to continue"}
-          </p>
-        )}
-      </div>
-    </main>
+            <div className="grid md:grid-cols-3 gap-8">
+              {/* Feature 1 */}
+              <div className="bg-[var(--surface)] rounded-2xl p-8 border border-white/5 hover:border-[var(--primary)]/30 transition-colors">
+                <div className="w-14 h-14 bg-[var(--primary)]/20 rounded-xl flex items-center justify-center mb-6">
+                  <Video className="w-7 h-7 text-[var(--primary)]" />
+                </div>
+                <h3 className="text-xl font-semibold mb-3">Motion Creator</h3>
+                <p className="text-[var(--text-muted)]">
+                  Upload any photo and a reference video. Our AI will animate your character
+                  to match the exact movements and dance moves.
+                </p>
+              </div>
+
+              {/* Feature 2 */}
+              <div className="bg-[var(--surface)] rounded-2xl p-8 border border-white/5 hover:border-[var(--secondary)]/30 transition-colors">
+                <div className="w-14 h-14 bg-[var(--secondary)]/20 rounded-xl flex items-center justify-center mb-6">
+                  <Image className="w-7 h-7 text-[var(--secondary)]" />
+                </div>
+                <h3 className="text-xl font-semibold mb-3">Avatar Generator</h3>
+                <p className="text-[var(--text-muted)]">
+                  Create stunning AI avatars from text descriptions or transform
+                  existing photos into unique artistic styles.
+                </p>
+              </div>
+
+              {/* Feature 3 */}
+              <div className="bg-[var(--surface)] rounded-2xl p-8 border border-white/5 hover:border-purple-500/30 transition-colors">
+                <div className="w-14 h-14 bg-purple-500/20 rounded-xl flex items-center justify-center mb-6">
+                  <Zap className="w-7 h-7 text-purple-500" />
+                </div>
+                <h3 className="text-xl font-semibold mb-3">Lightning Fast</h3>
+                <p className="text-[var(--text-muted)]">
+                  Powered by cutting-edge AI models. Get your videos and avatars
+                  generated in minutes, not hours.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* CTA Section */}
+        <section className="py-24">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div className="bg-gradient-to-r from-[var(--primary)]/20 to-[var(--secondary)]/20 rounded-3xl p-12 border border-white/10">
+              <Sparkles className="w-12 h-12 text-[var(--primary)] mx-auto mb-6" />
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                Ready to Create?
+              </h2>
+              <p className="text-[var(--text-muted)] text-lg mb-8">
+                Join thousands of creators making viral content with AI.
+              </p>
+              <Link
+                href="/register"
+                className="inline-flex items-center gap-2 px-8 py-4 btn-primary rounded-xl font-semibold text-lg text-white"
+              >
+                Start Creating Now
+                <ArrowRight className="w-5 h-5" />
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* Footer */}
+        <footer className="py-8 border-t border-white/10">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-center gap-2 text-[var(--text-muted)]">
+              <Sparkles className="w-4 h-4 text-[var(--primary)]" />
+              <span>AI Creator Studio</span>
+            </div>
+          </div>
+        </footer>
+      </main>
+    </>
   );
 }

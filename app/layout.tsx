@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { Providers } from "@/components/Providers";
 
 export const metadata: Metadata = {
-  title: "TikTok Motion Creator",
-  description: "Create viral TikTok videos with AI-powered motion control",
+  title: "AI Creator Studio",
+  description: "Create viral TikTok videos and AI avatars",
 };
 
 export default function RootLayout({
@@ -14,7 +15,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="min-h-screen bg-background antialiased">
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

@@ -1,0 +1,72 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  image         String?
+  passwordHash  String?   // null for OAuth-only users
+  provider      String    @default("credentials") // "credentials" or "google"
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Subscription fields (Polar.sh)
+  polarCustomerId    String?   @unique
+  subscriptionStatus String    @default("free") // free, active, canceled
+  subscriptionTier   String    @default("free") // free, pro, business, corporate, enterprise
+  subscriptionId     String?
+  currentPeriodEnd   DateTime?
+
+  // Credit system
+  credits          Int       @default(250)   // Current credit balance
+  creditsResetDate DateTime  @default(now()) // When credits reset monthly
+
+  // Relations
+  avatarGenerations AvatarGeneration[]
+  videoGenerations  VideoGeneration[]
+}
+
+model AvatarGeneration {
+  id             String   @id @default(cuid())
+  userId         String
+  mode           String   // "create" or "edit"
+  prompt         String
+  sourceImageUrl String?  // Only for edit mode
+  createdAt      DateTime @default(now())
+
+  // Relations
+  user   User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  images AvatarImage[]
+}
+
+model AvatarImage {
+  id                   String   @id @default(cuid())
+  avatarGenerationId   String
+  url                  String
+  createdAt            DateTime @default(now())
+
+  // Relations
+  avatarGeneration AvatarGeneration @relation(fields: [avatarGenerationId], references: [id], onDelete: Cascade)
+}
+
+model VideoGeneration {
+  id                   String   @id @default(cuid())
+  userId               String
+  prompt               String?
+  characterOrientation String   // "image" or "video"
+  sourceImageUrl       String
+  sourceVideoUrl       String
+  resultUrl            String
+  fileName             String?
+  createdAt            DateTime @default(now())
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}

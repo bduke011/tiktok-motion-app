@@ -56,12 +56,16 @@ export function useVideoGeneration(): UseVideoGenerationReturn {
         clearTimeout(timeoutId);
 
         if (!response.ok) {
-          throw new Error(`Status check failed: ${response.statusText}`);
+          const errorText = await response.text();
+          console.error("Status check failed:", response.status, errorText);
+          throw new Error(`Status check failed: ${response.status} ${response.statusText}`);
         }
 
         const data: StatusResponse = await response.json();
+        console.log("Status response:", data);
 
         if (data.status === "COMPLETED" && data.video) {
+          console.log("Video completed:", data.video);
           setResult(data.video);
           setStatus("complete");
           setMessage(null);
@@ -70,6 +74,7 @@ export function useVideoGeneration(): UseVideoGenerationReturn {
         }
 
         if (data.status === "FAILED") {
+          console.error("Video generation failed:", data.message);
           setError(data.message || "Video generation failed");
           setStatus("error");
           stopPolling();
