@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useSession, signOut } from "next-auth/react";
-import { LogOut, User, Sparkles, ChevronDown, Video, Image } from "lucide-react";
+import { LogOut, User, Sparkles, ChevronDown, Video, Image, Layers } from "lucide-react";
 import { CreditDisplay } from "./CreditDisplay";
 
 export function Header() {
@@ -21,29 +21,32 @@ export function Header() {
           </Link>
 
           {/* Nav */}
-          <nav className="flex items-center gap-2 sm:gap-4">
+          <nav className="flex items-center gap-1 sm:gap-2">
             {status === "loading" ? (
               <div className="w-8 h-8 rounded-full bg-[var(--surface)] animate-pulse" />
             ) : session ? (
               <>
-                {/* Create Links */}
+                {/* Workflow Links - Ordered: Avatar → Combine → Video → Gallery */}
                 <Link
                   href="/avatar"
-                  className="px-3 py-2 text-sm text-[var(--text-muted)] hover:text-white transition-colors"
+                  className="px-2 sm:px-3 py-2 text-xs sm:text-sm text-[var(--text-muted)] hover:text-white transition-colors flex items-center gap-1.5"
                 >
-                  Create Avatar
-                </Link>
-                <Link
-                  href="/create"
-                  className="px-3 py-2 text-sm text-[var(--text-muted)] hover:text-white transition-colors"
-                >
-                  Create Video
+                  <Image className="w-4 h-4 hidden sm:block" />
+                  <span>Avatar</span>
                 </Link>
                 <Link
                   href="/combine"
-                  className="px-3 py-2 text-sm text-[var(--text-muted)] hover:text-white transition-colors"
+                  className="px-2 sm:px-3 py-2 text-xs sm:text-sm text-[var(--text-muted)] hover:text-white transition-colors flex items-center gap-1.5"
                 >
-                  Combine
+                  <Layers className="w-4 h-4 hidden sm:block" />
+                  <span>Combine</span>
+                </Link>
+                <Link
+                  href="/create"
+                  className="px-2 sm:px-3 py-2 text-xs sm:text-sm text-[var(--text-muted)] hover:text-white transition-colors flex items-center gap-1.5"
+                >
+                  <Video className="w-4 h-4 hidden sm:block" />
+                  <span>Video</span>
                 </Link>
 
                 {/* Gallery Dropdown */}
@@ -51,27 +54,27 @@ export function Header() {
                   <button
                     onClick={() => setGalleryOpen(!galleryOpen)}
                     onBlur={() => setTimeout(() => setGalleryOpen(false), 150)}
-                    className="flex items-center gap-1 px-3 py-2 text-sm text-[var(--text-muted)] hover:text-white transition-colors"
+                    className="flex items-center gap-1 px-2 sm:px-3 py-2 text-xs sm:text-sm text-[var(--text-muted)] hover:text-white transition-colors"
                   >
                     Gallery
-                    <ChevronDown className={`w-4 h-4 transition-transform ${galleryOpen ? "rotate-180" : ""}`} />
+                    <ChevronDown className={`w-3 h-3 sm:w-4 sm:h-4 transition-transform ${galleryOpen ? "rotate-180" : ""}`} />
                   </button>
 
                   {galleryOpen && (
                     <div className="absolute top-full right-0 mt-1 w-48 bg-[var(--surface)] border border-white/10 rounded-lg shadow-xl overflow-hidden">
-                      <Link
-                        href="/create/gallery"
-                        className="flex items-center gap-3 px-4 py-3 text-sm text-[var(--text-muted)] hover:text-white hover:bg-white/5 transition-colors"
-                      >
-                        <Video className="w-4 h-4" />
-                        Videos
-                      </Link>
                       <Link
                         href="/avatar/gallery"
                         className="flex items-center gap-3 px-4 py-3 text-sm text-[var(--text-muted)] hover:text-white hover:bg-white/5 transition-colors"
                       >
                         <Image className="w-4 h-4" />
                         Avatars
+                      </Link>
+                      <Link
+                        href="/create/gallery"
+                        className="flex items-center gap-3 px-4 py-3 text-sm text-[var(--text-muted)] hover:text-white hover:bg-white/5 transition-colors"
+                      >
+                        <Video className="w-4 h-4" />
+                        Videos
                       </Link>
                     </div>
                   )}
@@ -123,7 +126,7 @@ export function Header() {
                   href="/register"
                   className="px-4 py-2 btn-primary rounded-lg font-medium text-white text-sm"
                 >
-                  Get Started
+                  Start Free Trial
                 </Link>
               </div>
             )}

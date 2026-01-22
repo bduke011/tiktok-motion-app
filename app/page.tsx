@@ -12,6 +12,8 @@ import {
   Users,
   TrendingUp,
   Layers,
+  CreditCard,
+  Play,
 } from "lucide-react";
 import { Header } from "@/components/Header";
 import { useEffect } from "react";
@@ -23,7 +25,7 @@ export default function LandingPage() {
   // Redirect logged-in users to create page
   useEffect(() => {
     if (status === "authenticated") {
-      router.push("/create");
+      router.push("/avatar");
     }
   }, [status, router]);
 
@@ -58,26 +60,26 @@ export default function LandingPage() {
               <div className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--surface)] rounded-full border border-white/10 mb-8">
                 <Sparkles className="w-4 h-4 text-[var(--primary)]" />
                 <span className="text-sm text-[var(--text-muted)]">
-                  Powered by cutting-edge AI
+                  Create AI-powered product videos in minutes
                 </span>
               </div>
 
               <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
-                Create <span className="gradient-text">Viral Videos</span>
+                Turn Your Photos Into
                 <br />
-                in Minutes
+                <span className="gradient-text">Viral Ad Videos</span>
               </h1>
               <p className="text-xl md:text-2xl text-[var(--text-muted)] mb-10 max-w-2xl mx-auto">
-                Transform any photo into stunning TikTok videos with AI motion
-                control. Generate unique avatars. Go viral faster.
+                Create a digital avatar of yourself, combine it with your products,
+                and generate stunning video ads—all with AI. No filming required.
               </p>
 
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
                 <Link
                   href="/register"
                   className="w-full sm:w-auto px-8 py-4 btn-primary rounded-xl font-semibold text-lg text-white flex items-center justify-center gap-2"
                 >
-                  Start Creating Free
+                  Start Your Free Trial
                   <ArrowRight className="w-5 h-5" />
                 </Link>
                 <Link
@@ -86,6 +88,12 @@ export default function LandingPage() {
                 >
                   View Pricing
                 </Link>
+              </div>
+
+              {/* Card required notice */}
+              <div className="flex items-center justify-center gap-2 text-[var(--text-muted)] mb-8">
+                <CreditCard className="w-4 h-4" />
+                <span className="text-sm">First month free, then $4/month. Cancel anytime.</span>
               </div>
 
               {/* Social proof */}
@@ -103,95 +111,190 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* Features Section */}
+        {/* How it Works - Workflow */}
         <section className="py-24 bg-[var(--surface)]/50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-5xl font-bold mb-4">
-                Everything You Need to{" "}
-                <span className="gradient-text">Go Viral</span>
+                Your <span className="gradient-text">Creative Workflow</span>
               </h2>
               <p className="text-[var(--text-muted)] text-lg max-w-2xl mx-auto">
-                Professional-grade AI tools at your fingertips. No experience
-                required.
+                From avatar to viral video in four simple steps
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-4 gap-6">
+              {/* Step 1 */}
+              <div className="relative">
+                <div className="bg-[var(--surface)] rounded-2xl p-6 border border-white/5 hover:border-[var(--secondary)]/30 transition-all h-full">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 bg-[var(--secondary)]/20 rounded-full flex items-center justify-center text-lg font-bold text-[var(--secondary)]">
+                      1
+                    </div>
+                    <Image className="w-6 h-6 text-[var(--secondary)]" />
+                  </div>
+                  <h3 className="text-lg font-semibold mb-2">Create Your Avatar</h3>
+                  <p className="text-sm text-[var(--text-muted)]">
+                    Generate an AI avatar from a text description, or upload your photo
+                    and transform it into the perfect spokesperson for your brand.
+                  </p>
+                </div>
+                <div className="hidden md:block absolute top-1/2 -right-3 w-6 h-0.5 bg-white/20" />
+              </div>
+
+              {/* Step 2 */}
+              <div className="relative">
+                <div className="bg-[var(--surface)] rounded-2xl p-6 border border-white/5 hover:border-purple-500/30 transition-all h-full">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 bg-purple-500/20 rounded-full flex items-center justify-center text-lg font-bold text-purple-500">
+                      2
+                    </div>
+                    <Layers className="w-6 h-6 text-purple-500" />
+                  </div>
+                  <h3 className="text-lg font-semibold mb-2">Add Your Products</h3>
+                  <p className="text-sm text-[var(--text-muted)]">
+                    Use our Photo Combiner to merge your avatar with products—lipstick,
+                    clothing, gadgets. Up to 4 images blended with AI precision.
+                  </p>
+                </div>
+                <div className="hidden md:block absolute top-1/2 -right-3 w-6 h-0.5 bg-white/20" />
+              </div>
+
+              {/* Step 3 */}
+              <div className="relative">
+                <div className="bg-[var(--surface)] rounded-2xl p-6 border border-white/5 hover:border-orange-500/30 transition-all h-full">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 bg-orange-500/20 rounded-full flex items-center justify-center text-lg font-bold text-orange-500">
+                      3
+                    </div>
+                    <Play className="w-6 h-6 text-orange-500" />
+                  </div>
+                  <h3 className="text-lg font-semibold mb-2">Record Your Moves</h3>
+                  <p className="text-sm text-[var(--text-muted)]">
+                    Film a quick reference video of yourself doing the actions you want—talking,
+                    dancing, showcasing a product. This becomes your motion template.
+                  </p>
+                </div>
+                <div className="hidden md:block absolute top-1/2 -right-3 w-6 h-0.5 bg-white/20" />
+              </div>
+
+              {/* Step 4 */}
+              <div className="relative">
+                <div className="bg-[var(--surface)] rounded-2xl p-6 border border-white/5 hover:border-[var(--primary)]/30 transition-all h-full">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 bg-[var(--primary)]/20 rounded-full flex items-center justify-center text-lg font-bold text-[var(--primary)]">
+                      4
+                    </div>
+                    <Video className="w-6 h-6 text-[var(--primary)]" />
+                  </div>
+                  <h3 className="text-lg font-semibold mb-2">Generate Your Video</h3>
+                  <p className="text-sm text-[var(--text-muted)]">
+                    Upload your avatar and reference video. Choose to keep a static pose
+                    or mirror your exact movements. Click generate—your AI twin comes to life.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="text-center mt-12">
+              <Link
+                href="/register"
+                className="inline-flex items-center gap-2 px-8 py-4 btn-primary rounded-xl font-semibold text-lg text-white"
+              >
+                Start Creating Now
+                <ArrowRight className="w-5 h-5" />
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* Features Section */}
+        <section className="py-24">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-5xl font-bold mb-4">
+                Powerful <span className="gradient-text">AI Tools</span>
+              </h2>
+              <p className="text-[var(--text-muted)] text-lg max-w-2xl mx-auto">
+                Everything you need to create professional content, no experience required.
               </p>
             </div>
 
             <div className="grid md:grid-cols-3 gap-8">
               {/* Feature 1 */}
-              <div className="bg-[var(--surface)] rounded-2xl p-8 border border-white/5 hover:border-[var(--primary)]/30 transition-all hover:-translate-y-1">
-                <div className="w-14 h-14 bg-[var(--primary)]/20 rounded-xl flex items-center justify-center mb-6">
-                  <Video className="w-7 h-7 text-[var(--primary)]" />
-                </div>
-                <h3 className="text-xl font-semibold mb-3">Motion Creator</h3>
-                <p className="text-[var(--text-muted)] mb-4">
-                  Upload any photo and a reference video. Our AI animates your
-                  character to match exact movements and dance moves.
-                </p>
-                <ul className="space-y-2">
-                  <li className="flex items-center gap-2 text-sm text-[var(--text-muted)]">
-                    <Check className="w-4 h-4 text-green-400" />
-                    Any photo works
-                  </li>
-                  <li className="flex items-center gap-2 text-sm text-[var(--text-muted)]">
-                    <Check className="w-4 h-4 text-green-400" />
-                    5-second videos
-                  </li>
-                  <li className="flex items-center gap-2 text-sm text-[var(--text-muted)]">
-                    <Check className="w-4 h-4 text-green-400" />
-                    TikTok ready
-                  </li>
-                </ul>
-              </div>
-
-              {/* Feature 2 */}
               <div className="bg-[var(--surface)] rounded-2xl p-8 border border-white/5 hover:border-[var(--secondary)]/30 transition-all hover:-translate-y-1">
                 <div className="w-14 h-14 bg-[var(--secondary)]/20 rounded-xl flex items-center justify-center mb-6">
                   <Image className="w-7 h-7 text-[var(--secondary)]" />
                 </div>
                 <h3 className="text-xl font-semibold mb-3">Avatar Generator</h3>
                 <p className="text-[var(--text-muted)] mb-4">
-                  Create stunning AI avatars from text descriptions or transform
-                  existing photos into unique artistic styles.
+                  Create your digital twin from text or transform your photos
+                  into stunning AI avatars with unique artistic styles.
                 </p>
                 <ul className="space-y-2">
                   <li className="flex items-center gap-2 text-sm text-[var(--text-muted)]">
-                    <Check className="w-4 h-4 text-green-400" />4 images per
-                    generation
+                    <Check className="w-4 h-4 text-green-400" />
+                    4 variations per generation
                   </li>
                   <li className="flex items-center gap-2 text-sm text-[var(--text-muted)]">
                     <Check className="w-4 h-4 text-green-400" />
-                    Text-to-image
+                    Text-to-image creation
                   </li>
                   <li className="flex items-center gap-2 text-sm text-[var(--text-muted)]">
                     <Check className="w-4 h-4 text-green-400" />
-                    Image-to-image
+                    Photo transformation
                   </li>
                 </ul>
               </div>
 
-              {/* Feature 3 */}
+              {/* Feature 2 */}
               <div className="bg-[var(--surface)] rounded-2xl p-8 border border-white/5 hover:border-purple-500/30 transition-all hover:-translate-y-1">
                 <div className="w-14 h-14 bg-purple-500/20 rounded-xl flex items-center justify-center mb-6">
                   <Layers className="w-7 h-7 text-purple-500" />
                 </div>
                 <h3 className="text-xl font-semibold mb-3">Photo Combiner</h3>
                 <p className="text-[var(--text-muted)] mb-4">
-                  Merge multiple photos together seamlessly. Combine faces,
-                  styles, and elements into one perfect image.
+                  Seamlessly blend your avatar with products, backgrounds,
+                  or other elements. Perfect for product showcases.
                 </p>
                 <ul className="space-y-2">
                   <li className="flex items-center gap-2 text-sm text-[var(--text-muted)]">
                     <Check className="w-4 h-4 text-green-400" />
-                    Up to 4 source images
+                    Combine up to 4 images
                   </li>
                   <li className="flex items-center gap-2 text-sm text-[var(--text-muted)]">
                     <Check className="w-4 h-4 text-green-400" />
-                    Prompt control
+                    Natural AI blending
                   </li>
                   <li className="flex items-center gap-2 text-sm text-[var(--text-muted)]">
                     <Check className="w-4 h-4 text-green-400" />
-                    High quality output
+                    Prompt-guided results
+                  </li>
+                </ul>
+              </div>
+
+              {/* Feature 3 */}
+              <div className="bg-[var(--surface)] rounded-2xl p-8 border border-white/5 hover:border-[var(--primary)]/30 transition-all hover:-translate-y-1">
+                <div className="w-14 h-14 bg-[var(--primary)]/20 rounded-xl flex items-center justify-center mb-6">
+                  <Video className="w-7 h-7 text-[var(--primary)]" />
+                </div>
+                <h3 className="text-xl font-semibold mb-3">Video Creator</h3>
+                <p className="text-[var(--text-muted)] mb-4">
+                  Bring your avatar to life. Upload a reference video and watch
+                  your AI twin mirror every movement perfectly.
+                </p>
+                <ul className="space-y-2">
+                  <li className="flex items-center gap-2 text-sm text-[var(--text-muted)]">
+                    <Check className="w-4 h-4 text-green-400" />
+                    5-second TikTok-ready clips
+                  </li>
+                  <li className="flex items-center gap-2 text-sm text-[var(--text-muted)]">
+                    <Check className="w-4 h-4 text-green-400" />
+                    Pose or motion tracking
+                  </li>
+                  <li className="flex items-center gap-2 text-sm text-[var(--text-muted)]">
+                    <Check className="w-4 h-4 text-green-400" />
+                    Instant download
                   </li>
                 </ul>
               </div>
@@ -200,28 +303,30 @@ export default function LandingPage() {
         </section>
 
         {/* Pricing Preview Section */}
-        <section className="py-24">
+        <section className="py-24 bg-[var(--surface)]/50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-5xl font-bold mb-4">
-                Simple, <span className="gradient-text">Credit-Based</span>{" "}
-                Pricing
+                Simple <span className="gradient-text">Pricing</span>
               </h2>
               <p className="text-[var(--text-muted)] text-lg max-w-2xl mx-auto">
-                Pay only for what you use. $1 = 100 credits. No hidden fees.
+                Start free, upgrade when you need more power.
               </p>
             </div>
 
             <div className="grid md:grid-cols-4 gap-6 mb-12">
-              {/* Free */}
-              <div className="bg-[var(--surface)] rounded-2xl p-6 border border-white/10">
-                <h3 className="text-lg font-semibold mb-2">Free</h3>
+              {/* Starter */}
+              <div className="bg-[var(--secondary)]/5 rounded-2xl p-6 border border-[var(--secondary)]/30 relative">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-[var(--secondary)] text-black text-xs font-medium rounded-full">
+                  Free Trial
+                </div>
+                <h3 className="text-lg font-semibold mb-2">Starter</h3>
                 <div className="text-3xl font-bold mb-1">$0</div>
-                <p className="text-sm text-[var(--text-muted)] mb-4">
-                  250 credits/month
+                <p className="text-sm text-[var(--text-muted)] mb-2">
+                  first month
                 </p>
-                <p className="text-sm text-[var(--text-muted)]">
-                  Perfect for trying out
+                <p className="text-xs text-[var(--text-muted)]">
+                  then $4/month
                 </p>
               </div>
 
@@ -230,10 +335,10 @@ export default function LandingPage() {
                 <h3 className="text-lg font-semibold mb-2">Pro</h3>
                 <div className="text-3xl font-bold mb-1">$20</div>
                 <p className="text-sm text-[var(--text-muted)] mb-4">
-                  2,000 credits/month
+                  /month
                 </p>
                 <p className="text-sm text-[var(--text-muted)]">
-                  For regular creators
+                  2,000 credits
                 </p>
               </div>
 
@@ -245,10 +350,10 @@ export default function LandingPage() {
                 <h3 className="text-lg font-semibold mb-2">Business</h3>
                 <div className="text-3xl font-bold mb-1">$50</div>
                 <p className="text-sm text-[var(--text-muted)] mb-4">
-                  5,000 credits/month
+                  /month
                 </p>
                 <p className="text-sm text-[var(--text-muted)]">
-                  For power users
+                  5,000 credits
                 </p>
               </div>
 
@@ -257,10 +362,10 @@ export default function LandingPage() {
                 <h3 className="text-lg font-semibold mb-2">Corporate</h3>
                 <div className="text-3xl font-bold mb-1">$100</div>
                 <p className="text-sm text-[var(--text-muted)] mb-4">
-                  10,000 credits/month
+                  /month
                 </p>
                 <p className="text-sm text-[var(--text-muted)]">
-                  For teams & agencies
+                  10,000 credits
                 </p>
               </div>
             </div>
@@ -277,55 +382,6 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* How it Works */}
-        <section className="py-24 bg-[var(--surface)]/50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-5xl font-bold mb-4">
-                How It <span className="gradient-text">Works</span>
-              </h2>
-              <p className="text-[var(--text-muted)] text-lg">
-                Create viral content in three simple steps
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-3 gap-8">
-              <div className="text-center">
-                <div className="w-16 h-16 bg-[var(--primary)]/20 rounded-full flex items-center justify-center mx-auto mb-6 text-2xl font-bold text-[var(--primary)]">
-                  1
-                </div>
-                <h3 className="text-xl font-semibold mb-3">Upload</h3>
-                <p className="text-[var(--text-muted)]">
-                  Upload your photo and choose a motion reference video or
-                  describe what you want.
-                </p>
-              </div>
-
-              <div className="text-center">
-                <div className="w-16 h-16 bg-[var(--secondary)]/20 rounded-full flex items-center justify-center mx-auto mb-6 text-2xl font-bold text-[var(--secondary)]">
-                  2
-                </div>
-                <h3 className="text-xl font-semibold mb-3">Generate</h3>
-                <p className="text-[var(--text-muted)]">
-                  Our AI processes your content and creates stunning videos or
-                  images in minutes.
-                </p>
-              </div>
-
-              <div className="text-center">
-                <div className="w-16 h-16 bg-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-6 text-2xl font-bold text-purple-500">
-                  3
-                </div>
-                <h3 className="text-xl font-semibold mb-3">Share</h3>
-                <p className="text-[var(--text-muted)]">
-                  Download your creation and share it on TikTok, Instagram, or
-                  any platform.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
         {/* CTA Section */}
         <section className="py-24">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -337,15 +393,15 @@ export default function LandingPage() {
               <div className="relative">
                 <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full mb-6">
                   <TrendingUp className="w-4 h-4 text-green-400" />
-                  <span className="text-sm">Join the viral revolution</span>
+                  <span className="text-sm">Join creators going viral</span>
                 </div>
 
                 <h2 className="text-3xl md:text-5xl font-bold mb-4">
-                  Ready to Create?
+                  Ready to Create Your AI Twin?
                 </h2>
                 <p className="text-[var(--text-muted)] text-lg mb-8 max-w-xl mx-auto">
-                  Start with 250 free credits. No credit card required. Create
-                  your first viral video today.
+                  Start with 250 free credits. Build your avatar, showcase your products,
+                  and create scroll-stopping videos today.
                 </p>
 
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -353,7 +409,7 @@ export default function LandingPage() {
                     href="/register"
                     className="w-full sm:w-auto px-8 py-4 btn-primary rounded-xl font-semibold text-lg text-white flex items-center justify-center gap-2"
                   >
-                    Start Creating Free
+                    Start Free Trial
                     <ArrowRight className="w-5 h-5" />
                   </Link>
                   <Link
@@ -363,6 +419,10 @@ export default function LandingPage() {
                     Sign In
                   </Link>
                 </div>
+
+                <p className="text-sm text-[var(--text-muted)] mt-4">
+                  Card required • Cancel anytime • First month free
+                </p>
               </div>
             </div>
           </div>

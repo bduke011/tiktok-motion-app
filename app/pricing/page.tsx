@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
-import { Check, Sparkles, Zap, Building2, Crown } from "lucide-react";
+import { Check, Gift, Zap, Building2, Crown, CreditCard } from "lucide-react";
 import { Header } from "@/components/Header";
 import Link from "next/link";
 
@@ -15,19 +15,21 @@ interface UserInfo {
 const TIERS = [
   {
     id: "free",
-    name: "Free",
+    name: "Starter",
     price: "$0",
-    period: "forever",
+    afterTrial: "$4",
+    period: "first month",
     credits: 250,
-    icon: Sparkles,
+    icon: Gift,
     features: [
       "250 credits/month",
-      "~2 avatar generations",
-      "~4 video generations",
-      "Basic support",
+      "First month FREE",
+      "Then $4/month",
+      "Card required to start",
+      "Cancel anytime",
     ],
-    cta: "Current Plan",
-    disabled: true,
+    cta: "Start Free Trial",
+    productId: "4ca665cb-283c-46f2-9197-6ca2d162b9fd",
   },
   {
     id: "pro",
@@ -122,7 +124,18 @@ export default function PricingPage() {
               Simple, Transparent Pricing
             </h1>
             <p className="text-[var(--text-muted)] text-lg max-w-2xl mx-auto">
-              Pay for what you use. $1 = 100 credits. No hidden fees.
+              Start free, upgrade when you need more. $1 = 100 credits.
+            </p>
+          </div>
+
+          {/* Free Trial Banner */}
+          <div className="mb-8 p-6 bg-gradient-to-r from-[var(--primary)]/20 to-[var(--secondary)]/20 border border-[var(--primary)]/30 rounded-2xl text-center">
+            <div className="flex items-center justify-center gap-2 mb-2">
+              <Gift className="w-5 h-5 text-[var(--primary)]" />
+              <span className="font-semibold text-lg">Start with 250 Free Credits</span>
+            </div>
+            <p className="text-[var(--text-muted)]">
+              Your first month is completely free. Add a card to get started, cancel anytime.
             </p>
           </div>
 
@@ -147,7 +160,7 @@ export default function PricingPage() {
             {TIERS.map((tier) => {
               const Icon = tier.icon;
               const isCurrentTier = tier.id === currentTier;
-              const isUpgrade = TIERS.findIndex((t) => t.id === tier.id) > TIERS.findIndex((t) => t.id === currentTier);
+              const isStarter = tier.id === "free";
 
               return (
                 <div
@@ -155,6 +168,8 @@ export default function PricingPage() {
                   className={`relative p-6 rounded-2xl border ${
                     tier.popular
                       ? "border-[var(--primary)] bg-[var(--primary)]/5"
+                      : isStarter
+                      ? "border-[var(--secondary)]/50 bg-[var(--secondary)]/5"
                       : "border-white/10 bg-[var(--surface)]"
                   }`}
                 >
@@ -163,20 +178,40 @@ export default function PricingPage() {
                       Most Popular
                     </div>
                   )}
+                  {isStarter && (
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 bg-[var(--secondary)] text-black text-sm font-medium rounded-full">
+                      Free Trial
+                    </div>
+                  )}
 
                   <div className="text-center mb-6">
                     <div
                       className={`inline-flex items-center justify-center w-12 h-12 rounded-xl mb-4 ${
-                        tier.popular ? "bg-[var(--primary)]/20" : "bg-white/10"
+                        tier.popular
+                          ? "bg-[var(--primary)]/20"
+                          : isStarter
+                          ? "bg-[var(--secondary)]/20"
+                          : "bg-white/10"
                       }`}
                     >
-                      <Icon className={`w-6 h-6 ${tier.popular ? "text-[var(--primary)]" : "text-white"}`} />
+                      <Icon className={`w-6 h-6 ${
+                        tier.popular
+                          ? "text-[var(--primary)]"
+                          : isStarter
+                          ? "text-[var(--secondary)]"
+                          : "text-white"
+                      }`} />
                     </div>
                     <h3 className="text-xl font-bold">{tier.name}</h3>
                     <div className="mt-3">
                       <span className="text-4xl font-bold">{tier.price}</span>
                       <span className="text-[var(--text-muted)]">{tier.period}</span>
                     </div>
+                    {tier.afterTrial && (
+                      <p className="text-sm text-[var(--text-muted)] mt-1">
+                        then {tier.afterTrial}/month
+                      </p>
+                    )}
                     <p className="text-sm text-[var(--text-muted)] mt-2">
                       {tier.credits.toLocaleString()} credits/month
                     </p>
@@ -195,16 +230,14 @@ export default function PricingPage() {
                     <div className="w-full py-3 px-4 rounded-xl text-center font-medium bg-white/10 text-[var(--text-muted)]">
                       Current Plan
                     </div>
-                  ) : tier.id === "free" ? (
-                    <div className="w-full py-3 px-4 rounded-xl text-center font-medium bg-white/5 text-[var(--text-muted)]">
-                      Free Forever
-                    </div>
                   ) : session ? (
                     <Link
                       href={`/api/checkout?products=${tier.productId}&customerEmail=${session.user?.email}`}
                       className={`block w-full py-3 px-4 rounded-xl text-center font-medium transition-colors ${
                         tier.popular
                           ? "btn-primary text-white"
+                          : isStarter
+                          ? "bg-[var(--secondary)] hover:bg-[var(--secondary)]/80 text-black"
                           : "bg-white/10 hover:bg-white/20 text-white"
                       }`}
                     >
@@ -212,19 +245,29 @@ export default function PricingPage() {
                     </Link>
                   ) : (
                     <Link
-                      href="/login?callbackUrl=/pricing"
+                      href="/register"
                       className={`block w-full py-3 px-4 rounded-xl text-center font-medium transition-colors ${
                         tier.popular
                           ? "btn-primary text-white"
+                          : isStarter
+                          ? "bg-[var(--secondary)] hover:bg-[var(--secondary)]/80 text-black"
                           : "bg-white/10 hover:bg-white/20 text-white"
                       }`}
                     >
-                      Sign in to Upgrade
+                      {isStarter ? "Start Free Trial" : "Sign Up to Upgrade"}
                     </Link>
                   )}
                 </div>
               );
             })}
+          </div>
+
+          {/* Card Required Notice */}
+          <div className="mb-16 flex items-center justify-center gap-3 text-[var(--text-muted)]">
+            <CreditCard className="w-5 h-5" />
+            <p className="text-sm">
+              Card required for free trial. You won&apos;t be charged until your trial ends.
+            </p>
           </div>
 
           {/* Credit Costs */}
