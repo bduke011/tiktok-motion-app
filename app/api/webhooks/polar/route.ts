@@ -33,15 +33,15 @@ export const POST = Webhooks({
     console.log("Checkout updated:", checkout.id, checkout.status);
 
     // When checkout is confirmed, link customer to user
-    if (checkout.status === "confirmed" && checkout.customer_id) {
-      const customerEmail = checkout.customer_email;
+    if (checkout.status === "confirmed" && checkout.customerId) {
+      const customerEmail = checkout.customerEmail;
 
       if (customerEmail) {
         await prisma.user.updateMany({
           where: { email: customerEmail },
-          data: { polarCustomerId: checkout.customer_id },
+          data: { polarCustomerId: checkout.customerId },
         });
-        console.log(`Linked Polar customer ${checkout.customer_id} to ${customerEmail}`);
+        console.log(`Linked Polar customer ${checkout.customerId} to ${customerEmail}`);
       }
     }
   },
@@ -55,8 +55,8 @@ export const POST = Webhooks({
     const subscription = payload.data;
     console.log("Subscription active:", subscription.id);
 
-    const customerId = subscription.customer_id;
-    const productId = subscription.product_id;
+    const customerId = subscription.customerId;
+    const productId = subscription.productId;
     const tier = getTierFromProductId(productId);
     const credits = TIER_CREDITS[tier];
 
@@ -72,8 +72,8 @@ export const POST = Webhooks({
           subscriptionTier: tier,
           subscriptionStatus: "active",
           subscriptionId: subscription.id,
-          currentPeriodEnd: subscription.current_period_end
-            ? new Date(subscription.current_period_end)
+          currentPeriodEnd: subscription.currentPeriodEnd
+            ? new Date(subscription.currentPeriodEnd)
             : null,
           credits: credits === -1 ? 999999 : credits,
           creditsResetDate: new Date(),
@@ -92,16 +92,16 @@ export const POST = Webhooks({
     // Handle subscription renewal (reset credits)
     if (subscription.status === "active") {
       const user = await prisma.user.findFirst({
-        where: { polarCustomerId: subscription.customer_id },
+        where: { polarCustomerId: subscription.customerId },
       });
 
       if (user) {
-        const tier = getTierFromProductId(subscription.product_id);
+        const tier = getTierFromProductId(subscription.productId);
         const credits = TIER_CREDITS[tier];
 
         // Check if this is a new billing period
-        const newPeriodEnd = subscription.current_period_end
-          ? new Date(subscription.current_period_end)
+        const newPeriodEnd = subscription.currentPeriodEnd
+          ? new Date(subscription.currentPeriodEnd)
           : null;
 
         if (
@@ -130,7 +130,7 @@ export const POST = Webhooks({
 
     // Mark as canceled but keep access until period end
     await prisma.user.updateMany({
-      where: { polarCustomerId: subscription.customer_id },
+      where: { polarCustomerId: subscription.customerId },
       data: { subscriptionStatus: "canceled" },
     });
   },
@@ -141,7 +141,7 @@ export const POST = Webhooks({
 
     // Revert to free tier immediately
     await prisma.user.updateMany({
-      where: { polarCustomerId: subscription.customer_id },
+      where: { polarCustomerId: subscription.customerId },
       data: {
         subscriptionTier: "free",
         subscriptionStatus: "free",
