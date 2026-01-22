@@ -89,7 +89,7 @@ export default function GalleryPage() {
   return (
     <>
       <Header />
-      <main className="min-h-screen pt-28 p-6 md:p-12">
+      <main className="min-h-screen pt-28 p-6 md:p-12 md:pt-28">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
           <div className="flex items-center justify-between mb-12">
