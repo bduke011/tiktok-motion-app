@@ -10,6 +10,7 @@ interface UserInfo {
   credits: number;
   tier: string;
   maxCredits: number | null;
+  hasActiveSubscription?: boolean;
 }
 
 const TIERS = [
@@ -112,6 +113,7 @@ export default function PricingPage() {
   }, [session]);
 
   const currentTier = userInfo?.tier || "free";
+  const hasActiveSubscription = currentTier !== "free";
 
   return (
     <>
@@ -230,6 +232,17 @@ export default function PricingPage() {
                     <div className="w-full py-3 px-4 rounded-xl text-center font-medium bg-white/10 text-[var(--text-muted)]">
                       Current Plan
                     </div>
+                  ) : session && hasActiveSubscription ? (
+                    <Link
+                      href="/api/portal"
+                      className={`block w-full py-3 px-4 rounded-xl text-center font-medium transition-colors ${
+                        tier.popular
+                          ? "btn-primary text-white"
+                          : "bg-white/10 hover:bg-white/20 text-white"
+                      }`}
+                    >
+                      Change Plan
+                    </Link>
                   ) : session ? (
                     <Link
                       href={`/api/checkout?products=${tier.productId}&customerEmail=${session.user?.email}`}
