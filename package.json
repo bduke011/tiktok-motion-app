@@ -12,6 +12,7 @@
     "@fal-ai/client": "^1.2.1",
     "@fal-ai/server-proxy": "^1.1.2",
     "@polar-sh/nextjs": "^0.3.21",
+    "@polar-sh/sdk": "^0.42.2",
     "@prisma/client": "^6.2.1",
     "bcryptjs": "^2.4.3",
     "lucide-react": "^0.468.0",
@@ -33,4 +34,3 @@
     "typescript": "^5.7.2"
   }
 }
-
