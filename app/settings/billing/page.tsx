@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
@@ -42,7 +42,7 @@ const TIER_PRICES: Record<string, string> = {
   enterprise: "Custom",
 };
 
-export default function BillingPage() {
+function BillingContent() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -265,5 +265,30 @@ export default function BillingPage() {
         </div>
       </main>
     </>
+  );
+}
+
+function BillingLoading() {
+  return (
+    <>
+      <Header />
+      <main className="min-h-screen pt-28 p-6 md:p-12">
+        <div className="max-w-4xl mx-auto">
+          <div className="animate-pulse space-y-6">
+            <div className="h-8 w-48 bg-[var(--surface)] rounded" />
+            <div className="h-48 bg-[var(--surface)] rounded-2xl" />
+            <div className="h-32 bg-[var(--surface)] rounded-2xl" />
+          </div>
+        </div>
+      </main>
+    </>
+  );
+}
+
+export default function BillingPage() {
+  return (
+    <Suspense fallback={<BillingLoading />}>
+      <BillingContent />
+    </Suspense>
   );
 }
