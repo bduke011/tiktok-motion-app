@@ -91,12 +91,17 @@ export const authOptions: NextAuthOptions = {
           // For credentials, user.id is already the database ID
           token.id = user.id;
         }
+
+        // Check if user is admin
+        const adminEmails = process.env.ADMIN_EMAILS?.split(",").map((e) => e.trim().toLowerCase()) || [];
+        token.isAdmin = adminEmails.includes(user.email?.toLowerCase() || "");
       }
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
         session.user.id = token.id as string;
+        session.user.isAdmin = token.isAdmin as boolean;
       }
       return session;
     },
