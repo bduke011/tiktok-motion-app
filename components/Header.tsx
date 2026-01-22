@@ -108,6 +108,12 @@ export function Header() {
             ) : (
               <div className="flex items-center gap-2">
                 <Link
+                  href="/pricing"
+                  className="px-3 py-2 text-sm text-[var(--text-muted)] hover:text-white transition-colors"
+                >
+                  Pricing
+                </Link>
+                <Link
                   href="/login"
                   className="px-3 py-2 text-sm text-[var(--text-muted)] hover:text-white transition-colors"
                 >
