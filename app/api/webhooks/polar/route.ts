@@ -87,9 +87,9 @@ export const POST = Webhooks({
 
   onSubscriptionUpdated: async (payload) => {
     const subscription = payload.data;
-    console.log("Subscription updated:", subscription.id, subscription.status);
+    console.log("Subscription updated:", subscription.id, subscription.status, "product:", subscription.productId);
 
-    // Handle subscription renewal (reset credits)
+    // Handle subscription updates (plan changes, renewals)
     if (subscription.status === "active") {
       const user = await prisma.user.findFirst({
         where: { polarCustomerId: subscription.customerId },
@@ -98,28 +98,35 @@ export const POST = Webhooks({
       if (user) {
         const tier = getTierFromProductId(subscription.productId);
         const credits = TIER_CREDITS[tier];
-
-        // Check if this is a new billing period
         const newPeriodEnd = subscription.currentPeriodEnd
           ? new Date(subscription.currentPeriodEnd)
           : null;
 
-        if (
-          newPeriodEnd &&
+        // Check if tier changed (plan upgrade/downgrade)
+        const tierChanged = user.subscriptionTier !== tier;
+
+        // Check if this is a new billing period
+        const isNewBillingPeriod = newPeriodEnd &&
           user.currentPeriodEnd &&
-          newPeriodEnd > user.currentPeriodEnd
-        ) {
-          // New billing period - reset credits
+          newPeriodEnd > user.currentPeriodEnd;
+
+        if (tierChanged || isNewBillingPeriod) {
+          // Update tier and reset credits for plan changes or new billing period
           await prisma.user.update({
             where: { id: user.id },
             data: {
+              subscriptionTier: tier,
+              subscriptionStatus: "active",
+              subscriptionId: subscription.id,
               currentPeriodEnd: newPeriodEnd,
               credits: credits === -1 ? 999999 : credits,
               creditsResetDate: new Date(),
             },
           });
-          console.log(`Reset credits for ${user.email} - new billing period`);
+          console.log(`Updated ${user.email} to tier ${tier} with ${credits} credits (tierChanged: ${tierChanged}, newPeriod: ${isNewBillingPeriod})`);
         }
+      } else {
+        console.warn(`No user found for Polar customer ${subscription.customerId}`);
       }
     }
   },
