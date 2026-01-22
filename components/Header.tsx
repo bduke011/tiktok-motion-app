@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useSession, signOut } from "next-auth/react";
-import { LogOut, User, Sparkles, ChevronDown, Video, Image, Layers } from "lucide-react";
+import { LogOut, User, Sparkles, ChevronDown, Video, Image, Layers, LayoutDashboard } from "lucide-react";
 import { CreditDisplay } from "./CreditDisplay";
 
 export function Header() {
@@ -85,6 +85,13 @@ export function Header() {
 
                 {/* User Menu */}
                 <div className="flex items-center gap-2 pl-2 sm:pl-4 border-l border-white/10">
+                  <Link
+                    href="/dashboard"
+                    className="p-2 text-[var(--text-muted)] hover:text-white transition-colors"
+                    title="Dashboard"
+                  >
+                    <LayoutDashboard className="w-4 h-4" />
+                  </Link>
                   {session.user?.image ? (
                     <img
                       src={session.user.image}

@@ -283,3 +283,39 @@ export async function GET() {
     );
   }
 }
+
+export async function DELETE(request: Request) {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get("id");
+
+    if (!id) {
+      return NextResponse.json({ error: "Missing generation ID" }, { status: 400 });
+    }
+
+    // Verify ownership before delete
+    const generation = await prisma.avatarGeneration.findFirst({
+      where: { id, userId: session.user.id },
+    });
+
+    if (!generation) {
+      return NextResponse.json({ error: "Avatar not found" }, { status: 404 });
+    }
+
+    // Delete the generation (images will cascade delete due to relation)
+    await prisma.avatarGeneration.delete({ where: { id } });
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error("Error deleting avatar:", error);
+    return NextResponse.json(
+      { error: "Failed to delete avatar" },
+      { status: 500 }
+    );
+  }
+}
