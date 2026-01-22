@@ -3,7 +3,7 @@ import { prisma } from "./prisma";
 // Credit costs per action (35% profit margin)
 // $1 = 100 credits
 export const CREDIT_COSTS = {
-  avatar: 95, // 4 images @ $0.60 API cost → $0.95 user pays
+  avatar: 25, // 1 image @ $0.15 API cost → $0.25 user pays
   video: 55, // 5 seconds @ $0.35 API cost → $0.55 user pays
   combine: 25, // 1 image @ $0.15 API cost → $0.25 user pays
 } as const;

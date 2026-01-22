@@ -87,7 +87,7 @@ const TIERS = [
 ];
 
 const CREDIT_COSTS = [
-  { action: "Avatar (4 images)", credits: 95 },
+  { action: "Avatar (1 image)", credits: 25 },
   { action: "Video (5 seconds)", credits: 55 },
   { action: "Combine (1 image)", credits: 25 },
 ];
