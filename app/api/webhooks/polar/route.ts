@@ -162,15 +162,18 @@ export const POST = Webhooks({
       const tier = getTierFromProductId(order.productId);
       const credits = TIER_CREDITS[tier];
 
+      // Get customer email from nested customer object if available
+      const customerEmail = order.customer?.email;
+
       // Find user by Polar customer ID or email
       let user = await prisma.user.findFirst({
         where: { polarCustomerId: order.customerId },
       });
 
       // If not found by customerId, try by email
-      if (!user && order.customerEmail) {
+      if (!user && customerEmail) {
         user = await prisma.user.findFirst({
-          where: { email: order.customerEmail },
+          where: { email: customerEmail },
         });
 
         // Link the customer ID
@@ -195,7 +198,7 @@ export const POST = Webhooks({
         });
         console.log(`Order paid - Updated user ${user.email} to tier ${tier} with ${credits} credits`);
       } else {
-        console.warn(`Order paid - No user found for customer ${order.customerId} or email ${order.customerEmail}`);
+        console.warn(`Order paid - No user found for customer ${order.customerId} or email ${customerEmail}`);
       }
     }
   },
