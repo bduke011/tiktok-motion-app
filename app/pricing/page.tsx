@@ -233,7 +233,7 @@ export default function PricingPage() {
                       Current Plan
                     </div>
                   ) : session && hasActiveSubscription ? (
-                    <Link
+                    <a
                       href="/api/portal"
                       className={`block w-full py-3 px-4 rounded-xl text-center font-medium transition-colors ${
                         tier.popular
@@ -242,9 +242,9 @@ export default function PricingPage() {
                       }`}
                     >
                       Change Plan
-                    </Link>
+                    </a>
                   ) : session ? (
-                    <Link
+                    <a
                       href={`/api/checkout?products=${tier.productId}&customerEmail=${session.user?.email}`}
                       className={`block w-full py-3 px-4 rounded-xl text-center font-medium transition-colors ${
                         tier.popular
@@ -255,7 +255,7 @@ export default function PricingPage() {
                       }`}
                     >
                       {tier.cta}
-                    </Link>
+                    </a>
                   ) : (
                     <Link
                       href="/register"
