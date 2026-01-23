@@ -174,11 +174,17 @@ export default function VideoGalleryPage() {
                       />
                     ) : (
                       <div
-                        className="w-full h-full flex items-center justify-center cursor-pointer group"
+                        className="w-full h-full flex items-center justify-center cursor-pointer group relative"
                         onClick={() => setPlayingId(video.id)}
                       >
+                        {/* Thumbnail - use source image as preview */}
+                        <img
+                          src={video.sourceImageUrl}
+                          alt=""
+                          className="absolute inset-0 w-full h-full object-cover"
+                        />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                        <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center group-hover:bg-white/30 transition-colors">
+                        <div className="relative w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center group-hover:bg-white/30 transition-colors">
                           <Play className="w-8 h-8 text-white ml-1" />
                         </div>
                       </div>
