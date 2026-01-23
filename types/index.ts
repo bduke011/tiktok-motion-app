@@ -35,3 +35,27 @@ export type GenerationStatus =
   | "error";
 
 export type CharacterOrientation = "image" | "video";
+
+// Speech recognition types
+export type SpeechStatus = "idle" | "listening" | "error" | "unsupported";
+
+export type SpeechErrorType =
+  | "not-supported"
+  | "permission-denied"
+  | "no-speech"
+  | "audio-capture"
+  | "network"
+  | "aborted"
+  | "unknown";
+
+export interface UseSpeechToTextReturn {
+  isListening: boolean;
+  isSupported: boolean;
+  status: SpeechStatus;
+  error: SpeechErrorType | null;
+  errorMessage: string | null;
+  transcript: string;
+  startListening: () => void;
+  stopListening: () => void;
+  resetTranscript: () => void;
+}

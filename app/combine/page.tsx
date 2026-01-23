@@ -13,6 +13,7 @@ import {
   Plus,
 } from "lucide-react";
 import { Header } from "@/components/Header";
+import { DictationButton } from "@/components/DictationButton";
 import { useFalUpload } from "@/hooks/useFalUpload";
 
 const QUICK_PROMPTS = [
@@ -225,13 +226,21 @@ export default function CombinePage() {
             <label className="block text-sm font-medium mb-3">
               Describe how to combine the images
             </label>
-            <textarea
-              value={prompt}
-              onChange={(e) => setPrompt(e.target.value)}
-              placeholder="Combine these two people into a group photo in a park setting..."
-              className="w-full px-4 py-3 bg-[var(--surface)] border border-[var(--text-muted)]/30 rounded-xl focus:outline-none focus:border-[var(--primary)] transition-colors resize-none"
-              rows={3}
-            />
+            <div className="relative">
+              <textarea
+                value={prompt}
+                onChange={(e) => setPrompt(e.target.value)}
+                placeholder="Combine these two people into a group photo in a park setting..."
+                className="w-full px-4 py-3 pr-14 bg-[var(--surface)] border border-[var(--text-muted)]/30 rounded-xl focus:outline-none focus:border-[var(--primary)] transition-colors resize-none"
+                rows={3}
+              />
+              <div className="absolute right-3 bottom-3">
+                <DictationButton
+                  onTranscript={(text) => setPrompt((prev) => prev ? `${prev} ${text}` : text)}
+                  disabled={generating}
+                />
+              </div>
+            </div>
           </div>
 
           {/* Quick Prompts */}

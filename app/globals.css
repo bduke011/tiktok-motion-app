@@ -62,6 +62,19 @@ body {
   animation: spin-slow 3s linear infinite;
 }
 
+@keyframes pulse-mic {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(254, 44, 85, 0.7);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(254, 44, 85, 0);
+  }
+}
+
+.animate-pulse-mic {
+  animation: pulse-mic 1.5s ease-in-out infinite;
+}
+
 /* Gradient text */
 .gradient-text {
   background: linear-gradient(90deg, var(--primary), var(--secondary));

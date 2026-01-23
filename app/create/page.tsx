@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Sparkles, AlertCircle } from "lucide-react";
 import { Header } from "@/components/Header";
+import { DictationButton } from "@/components/DictationButton";
 import { FileUploader } from "@/components/FileUploader";
 import { VideoPreview } from "@/components/VideoPreview";
 import { ProgressIndicator } from "@/components/ProgressIndicator";
@@ -261,13 +262,21 @@ export default function CreatePage() {
               <label className="block text-sm font-medium mb-2">
                 Prompt (optional)
               </label>
-              <textarea
-                value={prompt}
-                onChange={(e) => setPrompt(e.target.value)}
-                placeholder="Describe any additional context for the video..."
-                className="w-full px-4 py-3 bg-black/50 border border-[var(--text-muted)]/30 rounded-xl focus:outline-none focus:border-[var(--primary)] transition-colors resize-none"
-                rows={2}
-              />
+              <div className="relative">
+                <textarea
+                  value={prompt}
+                  onChange={(e) => setPrompt(e.target.value)}
+                  placeholder="Describe any additional context for the video..."
+                  className="w-full px-4 py-3 pr-14 bg-black/50 border border-[var(--text-muted)]/30 rounded-xl focus:outline-none focus:border-[var(--primary)] transition-colors resize-none"
+                  rows={2}
+                />
+                <div className="absolute right-3 bottom-3">
+                  <DictationButton
+                    onTranscript={(text) => setPrompt((prev) => prev ? `${prev} ${text}` : text)}
+                    disabled={genStatus !== "idle"}
+                  />
+                </div>
+              </div>
             </div>
 
             {/* Orientation */}
