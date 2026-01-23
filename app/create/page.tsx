@@ -164,7 +164,7 @@ export default function CreatePage() {
     return (
       <>
         <Header />
-        <main className="min-h-screen pt-28 p-6 md:p-12">
+        <main className="min-h-screen pt-28 p-6 md:p-12 md:pt-28">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-12">
               <h1 className="text-4xl md:text-5xl font-bold gradient-text mb-4">
@@ -188,7 +188,7 @@ export default function CreatePage() {
     return (
       <>
         <Header />
-        <main className="min-h-screen pt-28 p-6 md:p-12 flex items-center justify-center">
+        <main className="min-h-screen pt-28 p-6 md:p-12 md:pt-28 flex items-center justify-center">
           <div className="max-w-4xl mx-auto w-full">
             <div className="text-center mb-8">
               <h1 className="text-4xl md:text-5xl font-bold gradient-text mb-4">
@@ -211,7 +211,7 @@ export default function CreatePage() {
   return (
     <>
       <Header />
-      <main className="min-h-screen pt-28 p-6 md:p-12">
+      <main className="min-h-screen pt-28 p-6 md:p-12 md:pt-28">
         <div className="max-w-4xl mx-auto">
           {/* Header */}
           <div className="text-center mb-12">
